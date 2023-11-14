@@ -1,0 +1,25 @@
+{
+  "name": "signalk-er-windlog",
+  "version": "1.0.0",
+  "description": "Automatically log your position wind and speed",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "signalk-node-server-plugin"
+  ],
+  "author": "Elliot Russo",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "better-sqlite3": "^9.1.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "bugs": {
+    "url": ""
+  },
+  "homepage": ""
+}
