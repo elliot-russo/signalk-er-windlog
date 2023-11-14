@@ -55,7 +55,7 @@ module.exports = function(app) {
   let FILE_ROOT = '/signalk-er-windlog/';
 
   if (isVenusOS())
-    FILE_ROOT = '/run/media/mmcblk0p1/signalk/signalk-er-windlog/';
+    FILE_ROOT = '/run/media/mmcblk0p1/signalk_plugins/signalk-er-windlog/';
   else
     FILE_ROOT = 'c:\\devprojects\\signalk-er-windlog\\data\\';
 
@@ -256,7 +256,7 @@ module.exports = function(app) {
   }
 
   function getKeyValue(key, maxAge) {
-    debug(`getKeyValue(${key})`);
+    //debug(`getKeyValue(${key})`);
     let Key = app.getSelfPath(key);
     if (!Key) {
         return null;
