@@ -115,37 +115,37 @@ module.exports = function(app) {
       },
       gpssource: {
         title: 'GPS Source',
-        type: "text",
-        default: ""
+        type: "string",
+        default: "n2k-on-ve.can-socket.21"
       },
       sogKey: {
         title: 'SOG Key',
-        type: "text",
+        type: "string",
         default: "navigation.speedOverGround.dj"
       },
       cogKey: {
         title: 'COG Key',
-        type: "text",
+        type: "string",
         default: "navigation.courseOverGroundTrue.dj"
       },
       stwKey: {
         title: 'STW Key',
-        type: "text",
+        type: "string",
         default: "navigation.speedThroughWater.dj"
       },
       hdgKey: {
         title: 'HDG Key',
-        type: "text",
-        default: "navigation.headingTrue.dj "
+        type: "string",
+        default: "navigation.headingTrue.dj"
       },
       awsKey: {
         title: 'AWS Key',
-        type: "text",
+        type: "string",
         default: "environment.wind.speedApparent.dj"
       },
       awaKey: {
         title: 'AWA Key',
-        type: "text",
+        type: "string",
         default: "environment.wind.angleApparent.dj"
       }
     }
