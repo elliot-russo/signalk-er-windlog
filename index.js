@@ -45,17 +45,19 @@ module.exports = function(app) {
   let options;
   let tableWindlog;
   let logTimer;
+  let unsubscribes = [];
+  let position;
 
   //let GPS_SOURCE;
   //let MODE;
 
   //let FILE_ROOT = 'c:\\devprojects\\signalk-voyage-ui';
-  let FILE_ROOT = '/windlog/';
+  let FILE_ROOT = '/signalk-er-windlog/';
 
   if (isVenusOS())
-    FILE_ROOT = '/run/media/mmcblk0p1/signalk_plugins/windlog/';
+    FILE_ROOT = '/run/media/mmcblk0p1/signalk/signalk-er-windlog/';
   else
-    FILE_ROOT = 'c:\\devprojects\\signalk-windlog\\data\\';
+    FILE_ROOT = 'c:\\devprojects\\signalk-er-windlog\\data\\';
 
   /* redundant with admin option? */
   function debug(message){
@@ -69,13 +71,11 @@ module.exports = function(app) {
 
     //options
     //MODE = options.mode.toString().toLowerCase();
-    //GPS_SOURCE = options.gpssource.toString().toLowerCase();
+    GPS_SOURCE = options.gpssource.toString().toLowerCase();
 
     /*
     if (MODE == "dev")
-    {
-
-    }
+    {}
     */
 
     debug("creating/opening database");
@@ -85,8 +85,25 @@ module.exports = function(app) {
     tableWindlog = database.Tables['WindLog'];
 
     debug("starting logging");
-    logData();
 
+    let localSubscription = {
+      context: 'vessel.self', // Get data for all contexts
+      subscribe: [{
+        path: 'navigation.position', // Get all paths
+        period: 5000 // Every 5000ms
+      }]
+    };
+  
+    app.subscriptionmanager.subscribe(
+      localSubscription,
+      unsubscribes,
+      subscriptionError => {
+        app.error('Error:' + subscriptionError);
+      },
+      processDelta(delta)
+    );
+
+    //logData();
     logTimer = setInterval(logData, options.interval * 1000);
 
     debug("started");
@@ -94,6 +111,8 @@ module.exports = function(app) {
 
   plugin.stop = function() {
     debug("stopping");
+    unsubscribes.forEach(f => f());
+    unsubscribes = [];
     logTimer && clearTimeout(logTimer);
     database.close();
     debug("stopped");
@@ -110,7 +129,7 @@ module.exports = function(app) {
       },
       mode: {
         title: 'Mode',
-        type: "number",
+        type: "string",
         default: "dev"
       },
       gpssource: {
@@ -151,22 +170,46 @@ module.exports = function(app) {
     }
   };
 
+  function processDelta(delta){
+
+    if (!delta.updates 
+      || !delta.updates.length 
+      || !delta.updates[0].values 
+      || !delta.updates[0].values.length) {
+      return;
+    }
+
+    let update = delta.updates[0];
+    let entry = update.values[0];
+    let path = entry.path;
+    let value = entry.value;
+    
+    if (typeof (path) === 'undefined' || typeof (value) === 'undefined')
+      return;
+    else if ((GPS_SOURCE) && (update['$source'] != GPS_SOURCE)) 
+      return;
+    
+    if (entry.path == "navigation.position")
+      position = entry.value;
+
+  }
+  
   function logData(){
 
-    debug("logData()");
+    //debug("logData()");
 
     let data = getData();
-    debug(data);
+    //debug(data);
 
     if (data)
     {
-      debug("attempt insert");
+      //debug("attempt insert");
 
       let info = tableWindlog.insert(data);
       
-      debug(info);
+      //debug(info);
 
-      app.setPluginStatus(`Data logged ${data.DateTime} ${data.SOG} ${data.COG}` );
+      app.setPluginStatus(`Data logged ${data.DateTime} ${data.latitude} ${data.longitude} ${data.SOG} ${data.COG}` );
 
     }
     else
@@ -176,15 +219,16 @@ module.exports = function(app) {
 
   function getData(){
 
-    debug("getData()");
+    //debug("getData()");
 
     let data;
     let sog = getKeyValue(options.sogKey, 15);
-debug(sog);
+    
+    //debug(sog);
 
-    //if (sog && sog > 1) {
+    if (position && sog && sog > 1) {
 
-      let position = getKeyValue('navigation.position', 15);
+      //let position = getKeyValue('navigation.position', 15);
       let cog = getKeyValue(options.cogKey, 15);
       let hdg = getKeyValue(options.hdgKey, 15);
       let stw = getKeyValue(options.stwKey, 15);
@@ -202,9 +246,9 @@ debug(sog);
           STW: metersPerSecondToKnots(stw),
           AWS: metersPerSecondToKnots(aws),
           AWA: radiantToDegrees(awa)
-        //}
+        }
 
-      //}
+      
       
     }
 
