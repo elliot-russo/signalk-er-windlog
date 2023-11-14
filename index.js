@@ -226,7 +226,7 @@ module.exports = function(app) {
     
     //debug(sog);
 
-    if (position && sog && sog > 1) {
+    if (position && sog ) { //&& sog > 1
 
       //let position = getKeyValue('navigation.position', 15);
       let cog = getKeyValue(options.cogKey, 15);
