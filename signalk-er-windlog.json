@@ -1,0 +1,16 @@
+{
+    "configuration": {
+      "interval": 10,
+      "mode":  "dev",
+      "gpssource": "",
+      "sogKey": "navigation.speedOverGround.dj",
+      "cogKey": "navigation.courseOverGroundTrue.dj",
+      "stwKey": "navigation.speedThroughWater.dj",
+      "hdgKey": "navigation.headingTrue.dj",
+      "awsKey": "environment.wind.speedApparent.dj",
+      "awaKey": "environment.wind.angleApparent.dj"
+    },
+    "enabled": true,
+    "enableDebug": true,
+    "enableLogging": false
+  }
