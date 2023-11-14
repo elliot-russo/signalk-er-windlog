@@ -100,7 +100,7 @@ module.exports = function(app) {
       subscriptionError => {
         app.error('Error:' + subscriptionError);
       },
-      processDelta(delta)
+      delta => processDelta(delta)
     );
 
     //logData();

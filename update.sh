@@ -7,6 +7,7 @@ wget https://raw.githubusercontent.com/elliot-russo/signalk-er-windlog/main/inde
 wget https://raw.githubusercontent.com/elliot-russo/signalk-er-windlog/main/package.json
 
 
+
 cd lib
 rm -i *
 
