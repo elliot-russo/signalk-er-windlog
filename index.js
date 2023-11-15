@@ -172,6 +172,8 @@ module.exports = function(app) {
 
   function processDelta(delta){
 
+    debug("processDelta()");
+
     if (!delta.updates 
       || !delta.updates.length 
       || !delta.updates[0].values 
@@ -190,13 +192,17 @@ module.exports = function(app) {
       return;
     
     if (entry.path == "navigation.position")
+    {
+      debug(" -- setting position")
       position = entry.value;
+    }
+      
 
   }
   
   function logData(){
 
-    //debug("logData()");
+    debug("logData()");
 
     let data = getData();
     //debug(data);
